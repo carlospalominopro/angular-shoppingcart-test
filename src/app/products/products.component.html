@@ -1,0 +1,95 @@
+
+<button
+type="button"
+class="counter-cart btnLogout"
+mat-fab
+matTooltip="Logout"
+color="warn"
+(click)="service.logout()"
+>
+<mat-icon>logout</mat-icon>
+</button>
+
+<mat-drawer-container>
+  <mat-drawer-content class="p-5">
+    <div class="card cardMain row px-4">
+      <div class="col-12 mt-3">
+        <div class="row">
+          <div class="col-12 col-md-7 text-center text-md-start">
+            <h1><b>Product List</b></h1>
+          </div>
+
+          <div
+            class="col-12 col-md-5 text-center text-md-end example-button-row"
+            *ngIf="countProducts"
+          >
+            <button
+              type="button"
+              class="counter-cart"
+              mat-fab
+              extended
+              matTooltip="Count items in cart"
+              color="primary"
+              routerLink="/products/cart"
+            >
+              {{ countProducts }}
+            </button>
+
+            <button
+              type="button"
+              mat-fab
+              extended
+              color="accent"
+              routerLink="/products/cart"
+            >
+              <mat-icon>shopping_cart</mat-icon>
+              Go to cart
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-12 row mt-3 mb-5 justify-content-center">
+        <div
+          class="card col-12 col-sm-6 col-md-4 col-lg-3 m-1 text-center text-md-start"
+          *ngFor="let product of products$ | async"
+        >
+          <div class="card-body row justify-content-center">
+            <img width="100px" [src]="product.image" alt="img" />
+          </div>
+          <div class="card-body">
+            <h5 class="card-title">
+              #{{ product.id }} <span [innerHTML]="product.name"></span>
+            </h5>
+            <p class="card-text">{{ product.description }}</p>
+          </div>
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item">Price : &euro; {{ product.cost | number : '1.2-2' }}</li>
+          </ul>
+          <div class="card-body">
+            <div class="row justify-content-end">
+              <button
+                mat-mini-fab
+                matTooltip="Add to cart"
+                color="primary"
+                *ngIf="!verify(product)"
+                (click)="add(product)"
+              >
+                <mat-icon>add</mat-icon>
+              </button>
+              <button
+                mat-mini-fab
+                matTooltip="Delete from cart"
+                color="warn"
+                *ngIf="verify(product)"
+                (click)="delete(product)"
+              >
+                <mat-icon>delete</mat-icon>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </mat-drawer-content>
+</mat-drawer-container>

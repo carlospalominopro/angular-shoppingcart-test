@@ -1,0 +1,62 @@
+{
+  "users": [
+    {
+      "id": 1,
+      "username": "test1",
+      "name": "Test 1",
+      "email": "test1@test.com",
+      "password": "123456"
+    },
+    {
+      "id": 2,
+      "username": "test2",
+      "name": "Test 2",
+      "email": "test2@test.com",
+      "password": "654321"
+    }
+  ],
+  "products": [
+    {
+      "id": 1,
+      "name": "MEN'S BETTER THAN NAKED&trade; JACKET",
+      "image": "http://images.thenorthface.com/is/image/TheNorthFace/236x204_CLR/mens-better-than-naked-jacket-AVMH_LC9_hero.png",
+      "description": "Men's",
+      "cost": 32
+    },
+    {
+      "id": 2,
+      "name": "WOMEN'S BETTER THAN NAKED&trade; JACKET",
+      "image": "http://images.thenorthface.com/is/image/TheNorthFace/236x204_CLR/womens-better-than-naked-jacket-AVKL_NN4_hero.png",
+      "description": "Women's",
+      "cost": 12
+    },
+    {
+      "id": 3,
+      "name": "WOMEN'S SINGLE-TRACK SHOE",
+      "image": "http://images.thenorthface.com/is/image/TheNorthFace/236x204_CLR/womens-single-track-shoe-ALQF_JM3_hero.png",
+      "description": "Running Shoes",
+      "cost": 63
+    },
+    {
+      "id": 4,
+      "name": "Enduro Boa&reg; Hydration Pack",
+      "image": "http://images.thenorthface.com/is/image/TheNorthFace/236x204_CLR/enduro-boa-hydration-pack-AJQZ_JK3_hero.png",
+      "description": "Equipment",
+      "cost": 24.32
+    },
+    {
+      "id": 5,
+      "name": "Nike Tenis Run Swift 2",
+      "image": "https://images.rappi.com/products/6cf6de35-637b-4131-92c1-e21d042aa7ba.png?d=200x200&e=png",
+      "description": "Tenis",
+      "cost": 299.99
+    },
+    {
+      "id": 6,
+      "name": "Nike Camiseta Sport Wear",
+      "image": "https://images.rappi.com/products/846d800e-94d4-4cf1-89f2-8c7595aab03a.png?d=128x128&e=png&q=70",
+      "description": "Men's Shirt",
+      "cost": 299.99
+    }
+  ]
+}

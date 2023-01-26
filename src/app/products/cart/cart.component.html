@@ -1,0 +1,154 @@
+<button
+  type="button"
+  class="counter-cart btnLogout"
+  mat-fab
+  matTooltip="Logout"
+  color="warn"
+  (click)="service.logout()"
+>
+  <mat-icon>logout</mat-icon>
+</button>
+
+<mat-drawer-container>
+  <mat-drawer-content class="p-5">
+    <div class="card cardMain row px-4">
+      <div class="col-12 mt-3">
+        <div class="row">
+          <div class="col-12 col-md-7 text-center text-md-start">
+            <h1><b>Shopping Cart</b></h1>
+          </div>
+
+          <div
+            class="col-12 col-md-5 text-center text-md-end example-button-row"
+          >
+            <button
+              type="button"
+              mat-mini-fab
+              matTooltip="Back"
+              color="basic"
+              routerLink="/products"
+            >
+              <mat-icon>arrow_back</mat-icon>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <ng-container *ngIf="cart.length">
+        <div class="col-12 row mt-3 mb-5 justify-content-center">
+          <div class="table-responsive">
+            <table class="table table-bordered text-center">
+              <thead>
+                <tr>
+                  <th>Cover</th>
+                  <th>ID</th>
+                  <th>Name</th>
+                  <th>Description</th>
+                  <th>Cost</th>
+                  <th></th>
+                  <th>Quantity</th>
+                  <th></th>
+                  <th>Delete</th>
+                </tr>
+              </thead>
+              <tbody>
+                <ng-container *ngFor="let item of cart">
+                  <tr>
+                    <td>
+                      <img width="100px" [src]="item.product.image" alt="img" />
+                    </td>
+                    <td>#{{ item.product.id }}</td>
+                    <td>
+                      <span [innerHTML]="item.product.name"></span>
+                    </td>
+                    <td>
+                      {{ item.product.description }}
+                    </td>
+                    <td>
+                      {{ item.product.cost | number : '1.2-2' }}
+                    </td>
+                    <td>
+                      <button
+                        mat-icon-button
+                        matTooltip="Minus"
+                        (click)="changeInput(1, item)"
+                      >
+                        <mat-icon>remove</mat-icon>
+                      </button>
+                    </td>
+                    <td>
+                      {{ item.quantity }}
+                    </td>
+                    <td>
+                      <button
+                        mat-icon-button
+                        matTooltip="Add"
+                        (click)="changeInput(2, item)"
+                      >
+                        <mat-icon>add</mat-icon>
+                      </button>
+                    </td>
+                    <td>
+                      <button
+                        mat-mini-fab
+                        matTooltip="Plus"
+                        color="warn"
+                        (click)="delete(item.product)"
+                      >
+                        <mat-icon>delete</mat-icon>
+                      </button>
+                    </td>
+                  </tr>
+                </ng-container>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="col-12 col-md-7 text-center text-md-start mt-3 mb-5">
+          <h2><b>Summary</b></h2>
+        </div>
+
+        <div class="col-12 row justify-content-center">
+          <div class="table-responsive">
+            <table class="table table-bordered text-center">
+              <thead>
+                <tr>
+                  <th>Quantity Items</th>
+                  <th>Total Price</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>{{ resumen.quantity }}</td>
+                  <td>{{ resumen.total | number : '1.2-2' }}</td>
+                  <td>
+                    <button
+                      type="button"
+                      class="counter-cart"
+                      mat-fab
+                      matTooltip="Checkout"
+                      color="accent"
+                      (click)="checkout()"
+                    >
+                      <mat-icon>paid</mat-icon>
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </ng-container>
+
+      <ng-container *ngIf="cart.length == 0">
+
+        <div class="alert alert-danger col-12" role="alert">
+          Cart empty :(
+        </div>
+      </ng-container>
+
+    </div>
+  </mat-drawer-content>
+</mat-drawer-container>

@@ -1,0 +1,70 @@
+<mat-drawer-container class="custom-container">
+  <mat-drawer-content class="p-5">
+    <mat-card class="mt-5">
+      <mat-card-header class="justify-content-center">
+        <mat-card-title>
+          <h1>Login</h1>
+        </mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="row justify-content-center">
+          <form
+            [formGroup]="formLogin"
+            (ngSubmit)="submit()"
+            class="form"
+          >
+            <div class="col-12 d-flex justify-content-center mt-2">
+              <mat-form-field appearance="fill" class="full-width">
+                <mat-label>Username</mat-label>
+                <input
+                  matInput
+                  type="text"
+                  placeholder="..."
+                  formControlName="username"
+                  required
+                />
+                <mat-error *ngIf="formLogin.get('username')?.errors"
+                  >Required</mat-error
+                >
+              </mat-form-field>
+            </div>
+
+            <div class="col-12 d-flex justify-content-center mt-2">
+              <mat-form-field appearance="fill" class="full-width">
+                <mat-label>Password</mat-label>
+                <input
+                  matInput
+                  type="password"
+                  placeholder="..."
+                  formControlName="password"
+                  required
+                />
+                <mat-error *ngIf="formLogin.get('password')?.errors"
+                  >Required</mat-error
+                >
+              </mat-form-field>
+            </div>
+
+            <div class="col-12 d-flex justify-content-center mt-2">
+              <button
+                type="submit"
+                mat-raised-button
+                color="primary"
+                [disabled]="formLogin.invalid"
+              >
+                Log in
+              </button>
+            </div>
+            <div class="col-12 d-flex justify-content-center mt-2" *ngIf="loading$ | async">
+              <mat-spinner></mat-spinner>
+            </div>
+            <div class="col-12 d-flex justify-content-center mt-3 text-center" *ngIf="(errorMessage$ | async) && errorFlag">
+             {{ (errorMessage$ | async) }}
+            </div>
+
+          </form>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </mat-drawer-content>
+</mat-drawer-container>
