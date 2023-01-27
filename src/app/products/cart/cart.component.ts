@@ -18,7 +18,7 @@ export class CartComponent implements OnInit {
   inCart: any;
 
   private subs: Subscription[] = [];
-  public resumen = { total: 0, quantity: 0 };
+  public summary = { total: 0, quantity: 0 };
 
 
   constructor(
@@ -65,27 +65,27 @@ export class CartComponent implements OnInit {
   }
 
   updateQuantity() {
-    this.service.actualizarCarrito(this.cart);
+    this.service.updateCart(this.cart);
   }
 
   delete(product : Product) {
-    this.service.quitarDelCarrito(product?.id);
+    this.service.removeOfCart(product?.id);
     this.updateProducts()
   }
 
   updateProducts() {
-    this.cart = this.service.getCarrito;
+    this.cart = this.service.getCart;
     this.countProducts = this.cart.length;
 
-    this.resumen = { total: 0, quantity: 0 };
+    this.summary = { total: 0, quantity: 0 };
     this.cart.forEach((p) => {
-      this.resumen.total += p.product.cost * p.quantity;
-      this.resumen.quantity += p.quantity;
+      this.summary.total += p.product.cost * p.quantity;
+      this.summary.quantity += p.quantity;
     });
   }
 
   checkout(){
-    this.service.actualizarCarrito([]);
+    this.service.updateCart([]);
     this.updateProducts()
     this.toastr.success('Thanks for purchase!')
     this.router.navigate(['/products'])

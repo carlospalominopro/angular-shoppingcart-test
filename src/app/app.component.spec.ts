@@ -1,16 +1,50 @@
 import { TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { AppComponent } from './app.component';
+import { BrowserModule } from '@angular/platform-browser';
+import {
+  StoreModule,
+} from '@ngrx/store';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { EffectsModule } from '@ngrx/effects';
+import { ApiService } from './utils/api.service';
+import { ErrorCatchingInterceptor } from './utils/error.interceptor';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MaterialModule } from './utils/material/material.module';
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+import { ROOT_REDUCERS } from './utils/app.state';
+import { UserEffects } from './login/store/effects/effects';
+import { ProductEffects } from './products/store/effects/effects';
+import { LoginGuard } from './utils/login.guard';
+import { AppRoutingModule } from './app-routing.module';
 
 describe('AppComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [
-        RouterTestingModule
+        RouterTestingModule,
+        BrowserModule,
+        BrowserAnimationsModule,
+        AppRoutingModule,
+        MaterialModule,
+        StoreModule.forRoot(ROOT_REDUCERS),
+        StoreDevtoolsModule.instrument({
+          name: 'Test',
+        }),
+        EffectsModule.forRoot([UserEffects, ProductEffects]),
       ],
       declarations: [
         AppComponent
       ],
+      providers : [
+        ApiService,
+        LoginGuard,
+        {
+          provide: HTTP_INTERCEPTORS,
+          useClass: ErrorCatchingInterceptor,
+          multi: true,
+        },
+      ]
     }).compileComponents();
   });
 
@@ -24,12 +58,5 @@ describe('AppComponent', () => {
     const fixture = TestBed.createComponent(AppComponent);
     const app = fixture.componentInstance;
     expect(app.title).toEqual('frontend');
-  });
-
-  it('should render title', () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    fixture.detectChanges();
-    const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('.content span')?.textContent).toContain('frontend app is running!');
   });
 });

@@ -10,10 +10,10 @@ import { Subject } from 'rxjs';
 })
 export class ApiService {
 
-  private API = 'http://localhost:3000';
+  public API = 'http://localhost:3000';
 
   private cart: Cart[] = [];
-  private updateCart = new Subject<any>();
+  private updateCartSub = new Subject<any>();
 
   constructor(private http: HttpClient) {
     try {
@@ -73,27 +73,27 @@ export class ApiService {
 
   }
 
-  agregarAlCarrito(cart: Cart) {
+  addAlCart(cart: Cart) {
     this.cart.push(cart);
-    this.actualizarLista();
+    this.updateList();
   }
 
-  actualizarCarrito(cart: Cart[]) {
+  updateCart(cart: Cart[]) {
     this.cart = cart;
-    this.actualizarLista();
+    this.updateList();
   }
 
-  private actualizarLista() {
+  private updateList() {
     const data = JSON.stringify(this.cart);
     try {
       localStorage.setItem('cart', data);
     } catch (err) {
     }
-    this.updateCart.next(true);
+    this.updateCartSub.next(true);
   }
 
 
-  public get getCarrito(): Cart[] {
+  public get getCart(): Cart[] {
 
     try {
       this.cart = JSON.parse(localStorage.getItem('cart') || '[]');
@@ -103,19 +103,13 @@ export class ApiService {
     return this.cart;
   }
 
-  vaciarCarro() {
-    this.cart = [];
-    this.actualizarLista();
-  }
-
-
-  quitarDelCarrito(id: number) {
+  removeOfCart(id: number) {
     this.cart = this.cart.filter(p => p.product.id !== id);
-    this.actualizarLista();
+    this.updateList();
   }
 
   viewUpdateProducts(): Observable<any> {
-    return this.updateCart.asObservable();
+    return this.updateCartSub.asObservable();
   }
 
 

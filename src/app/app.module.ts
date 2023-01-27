@@ -14,7 +14,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { LoginComponent } from './login/login.component';
 import { MaterialModule } from './utils/material/material.module';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
-import { ROOT_REDUCERS, AppState } from './utils/app.state';
+import { ROOT_REDUCERS } from './utils/app.state';
 import { UserEffects } from './login/store/effects/effects';
 import { ProductEffects } from './products/store/effects/effects';
 import { LoginGuard } from './utils/login.guard';

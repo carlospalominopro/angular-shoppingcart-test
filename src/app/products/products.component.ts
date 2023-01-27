@@ -24,7 +24,6 @@ export class ProductsComponent implements OnInit {
   inCart: any;
 
   constructor(
-    private toastr: ToastrService,
     private store: Store<AppState>,
     public service: ApiService
   ) {}
@@ -33,33 +32,33 @@ export class ProductsComponent implements OnInit {
     this.store.dispatch(getProducts());
     this.products$ = this.store.select(selectListProducts);
     this.checkCart();
-    this.updateProductos()
+    this.updateCart()
   }
 
   checkCart() {
     this.service.initCart();
   }
 
-  add(producto : Product) {
+  add(product : Product) {
     const pro: Cart = {
-      product : producto,
+      product : product,
       quantity: 1,
     };
-    this.service.agregarAlCarrito(pro);
-    this.updateProductos()
+    this.service.addAlCart(pro);
+    this.updateCart()
   }
 
   delete(product : Product) {
-    this.service.quitarDelCarrito(product?.id);
-    this.updateProductos()
+    this.service.removeOfCart(product?.id);
+    this.updateCart()
   }
 
   verify(product : Product) {
-    return this.service.getCarrito.find((p) => p.product.id === product?.id);
+    return this.service.getCart.find((p) => p.product.id === product?.id);
   }
 
-  updateProductos() {
-    this.cart = this.service.getCarrito;
+  updateCart() {
+    this.cart = this.service.getCart;
     this.countProducts = this.cart.length;
   }
 
