@@ -12,8 +12,8 @@ The following are the steps to be followed to execute the project locally
 
 ```bash
   /* Start frontend app && json-server db*/
-  $ npm install
-  $ npm run start:dev
+  $ yarn install
+  $ yarn run start:dev
   $ run project in http://localhost:4200
 ```
 
@@ -21,7 +21,7 @@ The following are the steps to be followed to execute the project locally
 ## Tests
 
 ```bash
-  $ npm run test
+  $ yarn run test
 ```
 
 Author : Carlos Palomino - 2023
