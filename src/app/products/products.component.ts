@@ -1,13 +1,17 @@
 import { Component, OnInit } from '@angular/core';
-import { ToastrService } from 'ngx-toastr';
 import { AppState } from '../utils/app.state';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { selectListProducts } from './store/selectors/selectors';
 import { getProducts } from './store/actions/actions';
 import Product from '../utils/products.interface';
-import { ApiService } from '../utils/api.service';
 import Cart from '../utils/cart.interface';
+import { selectCartProducts, selectFindProduct } from './cart/store/selectors/selectors';
+import {
+  addProduct,
+  deleteProduct,
+  getCart,
+} from './cart/store/actions/actions';
 
 @Component({
   selector: 'app-products',
@@ -15,51 +19,36 @@ import Cart from '../utils/cart.interface';
   styleUrls: ['./products.component.scss'],
 })
 export class ProductsComponent implements OnInit {
-
+  
   products$: Observable<any> = new Observable();
-  countProducts: number = 0;
+  cart$: Observable<any> = new Observable();
 
-  cart: Cart[] = [];
-
-  inCart: any;
-
-  constructor(
-    private store: Store<AppState>,
-    public service: ApiService
-  ) {}
+  constructor(private store: Store<AppState>) {}
 
   ngOnInit(): void {
     this.store.dispatch(getProducts());
     this.products$ = this.store.select(selectListProducts);
+    this.cart$ = this.store.select(selectCartProducts);
     this.checkCart();
-    this.updateCart()
   }
 
   checkCart() {
-    this.service.initCart();
+    this.store.dispatch(getCart());
   }
 
-  add(product : Product) {
-    const pro: Cart = {
-      product : product,
+  add(product: Product) {
+    const cart: Cart = {
+      product: product,
       quantity: 1,
     };
-    this.service.addAlCart(pro);
-    this.updateCart()
+    this.store.dispatch(addProduct({ cart }));
   }
 
-  delete(product : Product) {
-    this.service.removeOfCart(product?.id);
-    this.updateCart()
+  delete(product: Product) {
+    this.store.dispatch(deleteProduct({ productId: product.id }));
   }
 
-  verify(product : Product) {
-    return this.service.getCart.find((p) => p.product.id === product?.id);
+  verify(productId: number) : Observable<any> {    
+    return this.store.select(selectFindProduct(productId));    
   }
-
-  updateCart() {
-    this.cart = this.service.getCart;
-    this.countProducts = this.cart.length;
-  }
-
 }

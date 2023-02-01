@@ -7,12 +7,14 @@ import { ApiService } from '../utils/api.service';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { ErrorCatchingInterceptor } from '../utils/error.interceptor';
 import { CartComponent } from './cart/cart.component';
+import { LogoutComponent } from '../logout/logout.component';
 
 
 @NgModule({
   declarations: [
     ProductsComponent,
-    CartComponent
+    CartComponent,
+    LogoutComponent
   ],
   imports: [
     CommonModule,

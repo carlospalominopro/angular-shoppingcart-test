@@ -1,19 +1,14 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { throwError, Observable } from 'rxjs';
+import { throwError, Observable, of } from 'rxjs';
 import Cart from './cart.interface';
-import { Subject } from 'rxjs';
-
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ApiService {
-
   public API = 'http://localhost:3000';
-
   private cart: Cart[] = [];
-  private updateCartSub = new Subject<any>();
 
   constructor(private http: HttpClient) {
     try {
@@ -23,7 +18,6 @@ export class ApiService {
       localStorage.removeItem('cart');
     }
   }
-
 
   authLogin() {
     const url = this.API + '/users';
@@ -37,85 +31,113 @@ export class ApiService {
 
   // LOCALSTORAGE
 
-  getItem(index : string) {
+  getItem(index: string) {
     return JSON.parse(localStorage.getItem(index) || '0') || null;
   }
 
-  setItem(index : string, value : string) {
-    if(localStorage.getItem(index)){
-      return throwError(() => {message : 'Item already exists'});
-    }else{
-      localStorage.setItem(index, value)
+  setItem(index: string, value: string) {
+    if (localStorage.getItem(index)) {
+      return throwError(() => {
+        message: 'Item already exists';
+      });
+    } else {
+      localStorage.setItem(index, value);
       return 'OK';
     }
   }
 
-  isAuthenticated() : boolean{
-    if(localStorage.getItem('is_login')){
-      return true
-    }else{
+  isAuthenticated(): boolean {
+    if (localStorage.getItem('is_login')) {
+      return true;
+    } else {
       return false;
     }
   }
 
   // CART
 
-  initCart() : boolean{
-
+  initCart(): Observable<boolean> {
     const cart = this.getItem('cart');
 
-    if(!cart){
+    if (!cart) {
       this.setItem('cart', '[]');
-      return true
-    }else{
-      return false;
     }
 
+    return of(true);
   }
 
-  addAlCart(cart: Cart) {
-    this.cart.push(cart);
-    this.updateList();
+  public getCart(): Observable<Cart[]> {
+    const cart = this.getItem('cart');
+
+    if (!cart) {
+      this.setItem('cart', '[]');
+    }
+
+    this.cart = JSON.parse(localStorage.getItem('cart') || '[]');
+    return of(this.cart);
   }
 
-  updateCart(cart: Cart[]) {
-    this.cart = cart;
+  addToCart(item: Cart): Observable<boolean> {
+    this.initCart();
+
+    this.cart = [...this.cart, item];
     this.updateList();
+    return of(true);
+  }
+
+  removeOfCart(id: number): Observable<any> {
+    this.cart = [...this.cart.filter((p) => p.product.id !== id)];
+    this.updateList();
+    return of(true);
+  }
+
+  modifyQuantityS(value: boolean, productId: number): Observable<boolean> {
+    this.cart = [
+      ...this.cart.map((p: Cart) => {
+        let newQuantity = 0 + p.quantity;
+
+        if (p.product.id == productId) {
+          // ADD
+          if (value) {
+            newQuantity += 1;
+
+            // MINUS
+          } else {
+            if (newQuantity > 1) {
+              newQuantity -= 1;
+            }
+          }
+
+          console.log(newQuantity);
+        }
+
+        return {
+          ...p,
+          quantity: newQuantity,
+        };
+      }),
+    ];
+
+    this.updateList();
+    return of(true);
+  }
+
+  clearCart(): Observable<any> {
+    this.setItem('cart', '[]');
+
+    this.cart = [];
+    return of(true);
   }
 
   private updateList() {
     const data = JSON.stringify(this.cart);
     try {
       localStorage.setItem('cart', data);
-    } catch (err) {
-    }
-    this.updateCartSub.next(true);
+    } catch (err) {}
   }
 
-
-  public get getCart(): Cart[] {
-
-    try {
-      this.cart = JSON.parse(localStorage.getItem('cart') || '[]');
-    } catch (error) {
-    }
-
-    return this.cart;
-  }
-
-  removeOfCart(id: number) {
-    this.cart = this.cart.filter(p => p.product.id !== id);
-    this.updateList();
-  }
-
-  viewUpdateProducts(): Observable<any> {
-    return this.updateCartSub.asObservable();
-  }
-
-
-  logout(){
+  logout() {
     localStorage.clear();
     location.reload();
   }
-
 }

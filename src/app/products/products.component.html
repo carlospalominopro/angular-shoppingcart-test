@@ -1,15 +1,4 @@
 
-<button
-type="button"
-class="counter-cart btnLogout"
-mat-fab
-matTooltip="Logout"
-color="warn"
-(click)="service.logout()"
->
-<mat-icon>logout</mat-icon>
-</button>
-
 <mat-drawer-container>
   <mat-drawer-content class="p-5">
     <div class="card cardMain row px-4">
@@ -21,7 +10,7 @@ color="warn"
 
           <div
             class="col-12 col-md-5 text-center text-md-end example-button-row"
-            *ngIf="countProducts"
+            *ngIf="(cart$ | async).length"
           >
             <button
               type="button"
@@ -32,7 +21,7 @@ color="warn"
               color="primary"
               routerLink="/products/cart"
             >
-              {{ countProducts }}
+              {{ (cart$ | async).length  }}
             </button>
 
             <button
@@ -72,8 +61,8 @@ color="warn"
                 mat-mini-fab
                 matTooltip="Add to cart"
                 color="primary"
-                *ngIf="!verify(product)"
                 (click)="add(product)"
+                *ngIf="!(verify(product.id) | async)"
               >
                 <mat-icon>add</mat-icon>
               </button>
@@ -81,8 +70,8 @@ color="warn"
                 mat-mini-fab
                 matTooltip="Delete from cart"
                 color="warn"
-                *ngIf="verify(product)"
                 (click)="delete(product)"
+                *ngIf="(verify(product.id) | async)"
               >
                 <mat-icon>delete</mat-icon>
               </button>
@@ -93,3 +82,5 @@ color="warn"
     </div>
   </mat-drawer-content>
 </mat-drawer-container>
+
+<app-logout></app-logout>

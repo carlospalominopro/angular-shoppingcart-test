@@ -12,9 +12,7 @@ const reducer = createReducer(
   on(productActions.setProducts, (state, { products }) => ({
     ...state,
     products,
-  })),
-  on(productActions.addProduct, (state, { product }) => ({...state, product })),
-  on(productActions.initCart, (state) => ({...state })),
+  }))
 );
 
 export function productReducer(state: any | undefined, action: Action) {

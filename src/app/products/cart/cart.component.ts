@@ -1,10 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
-import { Subscription } from 'rxjs';
+import { Subscription, Observable } from 'rxjs';
 import Product from '../../utils/products.interface';
 import { ApiService } from '../../utils/api.service';
 import Cart from '../../utils/cart.interface';
 import { Router } from '@angular/router';
+import { AppState } from 'src/app/utils/app.state';
+import { Store } from '@ngrx/store';
+import { deleteProduct, clearCart, getCart, modifyQuantity } from './store/actions/actions';
+import { selectCartProducts, selectResumeCart } from './store/selectors/selectors';
 
 @Component({
   selector: 'app-cart',
@@ -13,80 +17,38 @@ import { Router } from '@angular/router';
 })
 export class CartComponent implements OnInit {
 
-  countProducts: number = 0;
-  cart: Cart[] = [];
-  inCart: any;
-
-  private subs: Subscription[] = [];
-  public summary = { total: 0, quantity: 0 };
+  cart$: Observable<any> = new Observable();
+  summary$: Observable<any> = new Observable();
 
 
   constructor(
     private toastr: ToastrService,
-    public service: ApiService,
     public router: Router,
+    public service: ApiService,
+    private store: Store<AppState>
   ) {}
 
   ngOnInit(): void {
+    
+    this.store.dispatch(getCart());
 
-    this.checkCart();
+    this.cart$ = this.store.select(selectCartProducts);
+    this.summary$ = this.store.select(selectResumeCart);
 
-    this.updateProducts();
-
-    this.subs.push(
-      this.service.viewUpdateProducts().subscribe((res) => {
-        this.updateProducts();
-      })
-    );
   }
 
-  checkCart() {
-    this.service.initCart();
+  changeInput(value :boolean, productId : number) {
+    this.store.dispatch(modifyQuantity({value, productId}))
   }
 
-  changeInput(opt :number, cart : Cart) {
-    // MINUS
-    if (opt == 1) {
-      if (cart.quantity > 1) {
-        cart.quantity -= 1;
-      }
-    }
-
-    // PLUS
-    if (opt == 2) {
-      cart.quantity += 1;
-    }
-
-    if (cart.quantity <= 1) {
-      cart.quantity = 1;
-    }
-
-    this.updateQuantity()
-  }
-
-  updateQuantity() {
-    this.service.updateCart(this.cart);
-  }
 
   delete(product : Product) {
-    this.service.removeOfCart(product?.id);
-    this.updateProducts()
-  }
-
-  updateProducts() {
-    this.cart = this.service.getCart;
-    this.countProducts = this.cart.length;
-
-    this.summary = { total: 0, quantity: 0 };
-    this.cart.forEach((p) => {
-      this.summary.total += p.product.cost * p.quantity;
-      this.summary.quantity += p.quantity;
-    });
+    this.store.dispatch(deleteProduct({ productId: product.id }));
   }
 
   checkout(){
-    this.service.updateCart([]);
-    this.updateProducts()
+    
+    this.store.dispatch(clearCart());
     this.toastr.success('Thanks for purchase!')
     this.router.navigate(['/products'])
   }
